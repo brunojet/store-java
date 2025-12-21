@@ -17,6 +17,14 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:4.0.0")
-    implementation("jakarta.persistence:jakarta.persistence-api:3.1.0")
+    // This module doesn't apply the Spring Boot / dependency-management plugins,
+    // so we import the Spring Boot BOM explicitly to allow versionless deps.
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.0.1"))
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("jakarta.persistence:jakarta.persistence-api")
+
+    // Lombok is used by common domain classes; pin to a version compatible with Java 25.
+    compileOnly("org.projectlombok:lombok:1.18.42")
+    annotationProcessor("org.projectlombok:lombok:1.18.42")
 }
