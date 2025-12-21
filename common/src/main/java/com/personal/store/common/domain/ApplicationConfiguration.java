@@ -23,10 +23,9 @@ public class ApplicationConfiguration {
     private Long applicationId;
 
     @Id
-    @Column(name = "integration_type_id")
-    private Long integrationTypeId;
+    @Column(name = "terminal_configuration_id")
+    private Long terminalConfigurationId;
 
-    @Id
-    @Column(name = "terminal_model_id")
-    private Long terminalModelId;
+    @Column(name = "package_name", length = 255)
+    private String packageName;
 }
