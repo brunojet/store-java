@@ -1,10 +1,24 @@
 package com.personal.store.common.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "storage_object")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class StorageObject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,18 +42,4 @@ public class StorageObject {
     @Column(name = "status")
     private Short status;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-    public String getPath() { return path; }
-    public void setPath(String path) { this.path = path; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getMimeType() { return mimeType; }
-    public void setMimeType(String mimeType) { this.mimeType = mimeType; }
-    public Short getStatus() { return status; }
-    public void setStatus(Short status) { this.status = status; }
 }

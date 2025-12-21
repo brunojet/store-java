@@ -1,9 +1,20 @@
 package com.personal.store.common.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "application_catalog")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApplicationCatalog {
     @Id
     @Column(name = "integration_type_id")
@@ -31,6 +42,4 @@ public class ApplicationCatalog {
     private Boolean active;
 
     // Note: composite PK mapping omitted for brevity; use @IdClass if needed
-    public Long getApplicationId() { return applicationId; }
-    public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
 }
