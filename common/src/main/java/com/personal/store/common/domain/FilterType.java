@@ -6,6 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "terminal_model")
-public class TerminalModel extends SimpleEntityAbstraction {
+@Table(name = "filter_type")
+public class FilterType extends SimpleEntityAbstraction {
 }

@@ -13,10 +13,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class AuditAbstraction {
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
@@ -28,9 +28,7 @@ public abstract class AuditAbstraction {
         if (createdAt == null) {
             createdAt = now;
         }
-        if (updatedAt == null) {
-            updatedAt = now;
-        }
+        updatedAt = now;
     }
 
     @PreUpdate
