@@ -2,10 +2,14 @@ package com.personal.store.common.domain;
 
 import java.time.LocalDateTime;
 
-import com.personal.store.common.domain.abstraction.BaseEntityAbstraction;
+import com.personal.store.common.domain.abstraction.SimpleEntityAbstraction;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,26 +22,25 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationVersion extends BaseEntityAbstraction {
-    @Column(name = "name", nullable = false)
-    private String name;
+public class ApplicationVersion extends SimpleEntityAbstraction {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumns({
+        @JoinColumn(
+            name = "application_id",
+            referencedColumnName = "application_id",
+            insertable = false,
+            updatable = false
+        ),
+        @JoinColumn(
+            name = "terminal_configuration_id",
+            referencedColumnName = "terminal_configuration_id",
+            insertable = false,
+            updatable = false
+        )
+    })
+    private ApplicationConfiguration applicationConfiguration;
 
-    @Column(name = "description", columnDefinition = "longtext")
-    private String description;
-
-    @Column(name = "active")
-    private Boolean active;
-
-    @Column(name = "application_id", nullable = false)
-    private Long applicationId;
-
-    @Column(name = "integration_type_id", nullable = false)
-    private Long integrationTypeId;
-
-    @Column(name = "terminal_model_id", nullable = false)
-    private Long terminalModelId;
-
-    @Column(name = "version_name", nullable = false)
+    @Column(name = "version_name", length = 255, nullable = false)
     private String versionName;
 
     @Column(name = "version_code", nullable = false)
@@ -46,18 +49,9 @@ public class ApplicationVersion extends BaseEntityAbstraction {
     @Column(name = "size", nullable = false)
     private Long size;
 
-    @Column(name = "image_id")
-    private Long imageId;
-
     @Column(name = "pilot_at")
     private LocalDateTime pilotAt;
 
     @Column(name = "production_at")
     private LocalDateTime productionAt;
-
-    @Column(name = "deactivated_at")
-    private LocalDateTime deactivatedAt;
-
-    @Column(name = "deactivation_cause", length = 255)
-    private String deactivationCause;
 }
