@@ -3,7 +3,6 @@ package com.personal.store.common.domain;
 import com.personal.store.common.domain.abstraction.BaseEntityAbstraction;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -24,6 +23,6 @@ public class TerminalConfiguration extends BaseEntityAbstraction {
     private TerminalModel terminalModel;
 
     @Column(name = "integration_type", nullable = false)
-    @Convert(converter = TerminalIntegrationTypeConverter.class)
+    @jakarta.persistence.Enumerated(jakarta.persistence.EnumType.ORDINAL)
     private TerminalIntegrationType integrationType;
 }
