@@ -24,7 +24,7 @@ public abstract class StorageObjectAbstraction extends BaseEntityAbstraction {
     private Long sizeInBytes;
 
     @Column(name = "file_hash", length = 32, nullable = false)
-    private Byte[] fileHash;
+    private byte[] fileHash;
 
     @Column(name = "status")
     @Convert(converter = StorageObjectStatusConverter.class)

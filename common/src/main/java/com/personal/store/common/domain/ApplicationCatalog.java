@@ -1,14 +1,15 @@
 package com.personal.store.common.domain;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinColumns;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,7 +34,7 @@ public class ApplicationCatalog {
 
     @Id
     @Column(name = "stage")
-    @Convert(converter = ApplicationStageConverter.class)
+    @Enumerated(EnumType.ORDINAL)
     private ApplicationStage stage;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

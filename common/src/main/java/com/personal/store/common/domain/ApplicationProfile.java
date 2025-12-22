@@ -11,8 +11,10 @@ import com.personal.store.common.domain.abstraction.SimpleEntityAbstraction;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
@@ -39,6 +41,7 @@ public class ApplicationProfile extends SimpleEntityAbstraction {
     @Convert(converter = ApplicationStageConverter.class)
     private ApplicationStage stage;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "icon_id", referencedColumnName= "id", nullable = false)
     private ApplicationImage icon;
 
