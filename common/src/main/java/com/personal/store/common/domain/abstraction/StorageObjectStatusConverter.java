@@ -4,17 +4,20 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = false)
-public class StorageObjectStatusConverter implements AttributeConverter<StorageObjectStatus, Short> {
+public class StorageObjectStatusConverter implements AttributeConverter<StorageObjectStatus, Integer> {
     @Override
-    public Short convertToDatabaseColumn(StorageObjectStatus attribute) {
+    public Integer convertToDatabaseColumn(StorageObjectStatus attribute) {
         if (attribute == null) {
             return null;
         }
-        return attribute.getCode();
+        return (int) attribute.getCode();
     }
 
     @Override
-    public StorageObjectStatus convertToEntityAttribute(Short dbData) {
-        return StorageObjectStatus.fromCode(dbData);
+    public StorageObjectStatus convertToEntityAttribute(Integer dbData) {
+        if (dbData == null) {
+            return null;
+        }
+        return StorageObjectStatus.fromCode((short) (int) dbData);
     }
 }

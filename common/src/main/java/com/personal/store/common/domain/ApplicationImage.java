@@ -3,7 +3,6 @@ package com.personal.store.common.domain;
 import com.personal.store.common.domain.abstraction.StorageObjectAbstraction;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -25,10 +24,7 @@ public class ApplicationImage extends StorageObjectAbstraction {
     @JoinColumn(name = "application_id", nullable = false)
     private Application application;
 
-    @Column(name = "application_id", nullable = false, insertable = false, updatable = false)
-    private Long applicationId;
-
-    @Column(name = "image_type")
-    @Convert(converter = ApplicationImageTypeConverter.class)
+    @Column(name = "image_type", columnDefinition = "SMALLINT")
+    @jakarta.persistence.Convert(converter = ApplicationImageTypeConverter.class)
     private ApplicationImageType imageType;
 }

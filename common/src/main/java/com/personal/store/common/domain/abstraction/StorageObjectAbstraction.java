@@ -1,7 +1,6 @@
 package com.personal.store.common.domain.abstraction;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,8 +25,14 @@ public abstract class StorageObjectAbstraction extends BaseEntityAbstraction {
     @Column(name = "file_hash", length = 32, nullable = false)
     private byte[] fileHash;
 
-    @Column(name = "status")
-    @Convert(converter = StorageObjectStatusConverter.class)
+    @Column(name = "status", columnDefinition = "SMALLINT")
+    @jakarta.persistence.Convert(converter = StorageObjectStatusConverter.class)
     private StorageObjectStatus status;
 
 }
+
+/*
+    @Column(name = "image_type", columnDefinition = "SMALLINT")
+    @jakarta.persistence.Convert(converter = ApplicationImageTypeConverter.class)
+
+*/

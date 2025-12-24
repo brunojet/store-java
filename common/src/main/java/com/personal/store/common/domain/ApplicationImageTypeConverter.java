@@ -4,17 +4,20 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = false)
-public class ApplicationImageTypeConverter implements AttributeConverter<ApplicationImageType, Short> {
+public class ApplicationImageTypeConverter implements AttributeConverter<ApplicationImageType, Integer> {
     @Override
-    public Short convertToDatabaseColumn(ApplicationImageType attribute) {
+    public Integer convertToDatabaseColumn(ApplicationImageType attribute) {
         if (attribute == null) {
             return null;
         }
-        return attribute.getCode();
+        return (int) attribute.getCode();
     }
 
     @Override
-    public ApplicationImageType convertToEntityAttribute(Short dbData) {
-        return ApplicationImageType.fromCode(dbData);
+    public ApplicationImageType convertToEntityAttribute(Integer dbData) {
+        if (dbData == null) {
+            return null;
+        }
+        return ApplicationImageType.fromCode((short) (int) dbData);
     }
 }

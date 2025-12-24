@@ -32,7 +32,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-data-jpa-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testRuntimeOnly("com.h2database:h2")
+    // MySQL driver for running tests against local MySQL
+    testRuntimeOnly("com.mysql:mysql-connector-j:8.1.0")
 }
 
 tasks.test {
