@@ -1,6 +1,7 @@
 package com.personal.store.common.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -9,7 +10,6 @@ import org.springframework.test.context.ContextConfiguration;
 import com.personal.store.common.CommonTestApplication;
 
 import jakarta.persistence.EntityManager;
-import org.hibernate.Session;
 
 @DataJpaTest
 @ContextConfiguration(classes = CommonTestApplication.class)
@@ -69,6 +69,26 @@ class ApplicationImageEntityTest {
                     .getResultList();
                 for (Object[] r : checks) {
                     System.out.println("  " + r[0] + " => " + r[1]);
+                }
+
+                // Align existing local schema with the application's enum codes.
+                // Hibernate may have created the CHECK constraint using enum ordinals (0..n),
+                // but StorageObjectStatus uses explicit codes (0, 10, 20, 30, 40).
+                String desiredStatusCheck = "(`status` in (0,10,20,30,40))";
+                String currentStatusCheck = null;
+                for (Object[] r : checks) {
+                    if ("application_image_chk_1".equalsIgnoreCase(String.valueOf(r[0]))) {
+                        currentStatusCheck = String.valueOf(r[1]);
+                        break;
+                    }
+                }
+                if (currentStatusCheck != null && !desiredStatusCheck.equalsIgnoreCase(currentStatusCheck.replaceAll("\\s+", ""))) {
+                    System.out.println("[schema] fixing application_image_chk_1: " + currentStatusCheck + " -> " + desiredStatusCheck);
+                    // Drop and recreate the constraint (MySQL doesn't support altering CHECK in-place).
+                    entityManager.createNativeQuery("ALTER TABLE application_image DROP CHECK application_image_chk_1")
+                        .executeUpdate();
+                    entityManager.createNativeQuery("ALTER TABLE application_image ADD CONSTRAINT application_image_chk_1 CHECK (status in (0,10,20,30,40))")
+                        .executeUpdate();
                 }
             } catch (Exception e) {
                 System.out.println("  (could not query MySQL CHECK clauses: " + e.getClass().getSimpleName() + ")");

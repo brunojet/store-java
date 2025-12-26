@@ -1,12 +1,11 @@
 package com.personal.store.common.domain.abstraction;
 
 public enum StorageObjectStatus {
-    PENDING((short) 0),
-    PROCESSING((short) 1),
-    AVAILABLE((short) 2),
-    FAILED((short) 3),
-    DELETED((short) 4);
-
+    PENDING((short) 0x0000),
+    PROCESSING((short) 0x000A),
+    AVAILABLE((short) 0x0014),
+    FAILED((short) 0x001E),
+    DELETED((short) 0x0028);
     private final short code;
 
     StorageObjectStatus(short code) {

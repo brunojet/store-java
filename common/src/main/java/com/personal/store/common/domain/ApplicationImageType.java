@@ -1,9 +1,9 @@
 package com.personal.store.common.domain;
 
 public enum ApplicationImageType {
-    ICON((short) 0),
-    SCREENSHOT((short) 1),
-    BANNER((short) 2);
+    ICON((short) 0x0000),
+    SCREENSHOT((short) 0x0001),
+    BANNER((short) 0x0002);
 
     private final short code;
 
