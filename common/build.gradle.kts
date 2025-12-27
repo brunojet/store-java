@@ -31,6 +31,9 @@ dependencies {
     testImplementation(platform("org.springframework.boot:spring-boot-dependencies:4.0.1"))
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.boot:spring-boot-data-jpa-test")
+    // Some IDE/JUnit runners don't include testRuntimeOnly on the classpath.
+    // Keeping the JDBC driver as testImplementation avoids "Cannot load driver class".
+    testRuntimeOnly("com.mysql:mysql-connector-j:8.1.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testRuntimeOnly("com.h2database:h2")
 }
