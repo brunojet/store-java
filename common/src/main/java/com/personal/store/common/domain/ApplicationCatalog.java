@@ -21,8 +21,8 @@ import lombok.Setter;
 @Table(name = "application_catalog", indexes = {
         @Index(name = "ix_app_catalog_app_term_stage", columnList = "application_id, terminal_configuration_id, stage"),
         @Index(name = "ix_app_catalog_stage_term_app", columnList = "stage, terminal_configuration_id, application_id"),
-        @Index(name = "ix_app_catalog_deleted_created", columnList = "deleted, created"),
-        @Index(name = "ix_app_catalog_updated_created", columnList = "updated, created")
+        @Index(name = "ix_app_catalog_deleted_created", columnList = "deleted_at, created_at"),
+        @Index(name = "ix_app_catalog_deleted_updated", columnList = "deleted_at, updated_at")
 })
 @Getter
 @Setter
@@ -40,11 +40,13 @@ public class ApplicationCatalog extends AuditAbstraction {
     })
     private ApplicationConfiguration applicationConfiguration;
 
-    @Column(name = "application_profile_id")
-    private Long applicationProfileId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "application_profile_id", referencedColumnName = "id", nullable = false)
+    private ApplicationProfile applicationProfile;
 
-    @Column(name = "application_version_id")
-    private Long applicationVersionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "application_version_id", referencedColumnName = "id")
+    private ApplicationVersion applicationVersion;
 
     @Column(name = "active")
     private Boolean active;
