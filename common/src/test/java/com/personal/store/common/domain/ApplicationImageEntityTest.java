@@ -10,6 +10,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.personal.store.common.CommonTestApplication;
+import com.personal.store.common.testutil.ApplicationImageSchemaWorkaround;
 
 import jakarta.persistence.EntityManager;
 
@@ -31,7 +32,7 @@ class ApplicationImageEntityTest {
         String databaseProduct = session.doReturningWork(c -> c.getMetaData().getDatabaseProductName());
         System.out.println("[schema] DB product = " + databaseProduct);
         printApplicationImageSchema(databaseProduct);
-        fixApplicationImageStatusCheckIfNeeded(databaseProduct);
+        ApplicationImageSchemaWorkaround.fixApplicationImageChecksIfNeeded(entityManager);
 
         ApplicationImage img = new ApplicationImage();
         img.setApplication(app);
@@ -124,41 +125,4 @@ class ApplicationImageEntityTest {
         }
     }
 
-    private void fixApplicationImageStatusCheckIfNeeded(String databaseProduct) {
-        try {
-            if (databaseProduct != null && databaseProduct.toLowerCase().contains("h2")) {
-                // H2's INFORMATION_SCHEMA.CHECK_CONSTRAINTS does not expose TABLE_NAME.
-                // Also, H2 often auto-names inline check constraints (e.g., CONSTRAINT_3).
-                // For test stability, drop all check constraints on APPLICATION_IMAGE and recreate
-                // the two checks we depend on using explicit enum code sets.
-                @SuppressWarnings("unchecked")
-                List<Object> checks = entityManager.createNativeQuery(
-                        "SELECT CONSTRAINT_NAME "
-                                + "FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS "
-                                + "WHERE TABLE_NAME='APPLICATION_IMAGE' AND CONSTRAINT_TYPE='CHECK'")
-                    .getResultList();
-
-                if (!checks.isEmpty()) {
-                    System.out.println("[schema] H2: dropping " + checks.size() + " CHECK constraint(s) on APPLICATION_IMAGE");
-                }
-
-                for (Object r : checks) {
-                    String name = String.valueOf(r);
-                    entityManager.createNativeQuery("ALTER TABLE APPLICATION_IMAGE DROP CONSTRAINT " + name)
-                        .executeUpdate();
-                }
-
-                entityManager.createNativeQuery(
-                        "ALTER TABLE APPLICATION_IMAGE "
-                                + "ADD CONSTRAINT APPLICATION_IMAGE_IMAGE_TYPE_CHK CHECK (IMAGE_TYPE IN (0,1,2))")
-                    .executeUpdate();
-                entityManager.createNativeQuery(
-                        "ALTER TABLE APPLICATION_IMAGE "
-                                + "ADD CONSTRAINT APPLICATION_IMAGE_STATUS_CHK CHECK (STATUS IN (0,10,20,30,40))")
-                    .executeUpdate();
-            }
-        } catch (Exception e) {
-            System.out.println("[schema] (could not fix status CHECK: " + e.getClass().getSimpleName() + ")");
-        }
-    }
 }
