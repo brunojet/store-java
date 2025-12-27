@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class ApplicationConfigurationId implements Serializable {
-    private Long applicationId;
-    private Long terminalConfigurationId;
+public class ApplicationProfileScreenshotId implements Serializable {
+    private Long applicationProfileId;
+    private Long applicationImageId;
 }

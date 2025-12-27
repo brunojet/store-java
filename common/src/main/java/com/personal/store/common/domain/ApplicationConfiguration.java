@@ -1,28 +1,31 @@
 package com.personal.store.common.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "application_configuration")
 @IdClass(ApplicationConfigurationId.class)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApplicationConfiguration {
     @Id
     @Column(name = "application_id")
     private Long applicationId;
 
     @Id
-    @Column(name = "integration_type_id")
-    private Long integrationTypeId;
+    @Column(name = "terminal_configuration_id")
+    private Long terminalConfigurationId;
 
-    @Id
-    @Column(name = "terminal_model_id")
-    private Long terminalModelId;
-
-    // constructors/getters/setters
-    public Long getApplicationId() { return applicationId; }
-    public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
-    public Long getIntegrationTypeId() { return integrationTypeId; }
-    public void setIntegrationTypeId(Long integrationTypeId) { this.integrationTypeId = integrationTypeId; }
-    public Long getTerminalModelId() { return terminalModelId; }
-    public void setTerminalModelId(Long terminalModelId) { this.terminalModelId = terminalModelId; }
+    @Column(name = "package_name", length = 255)
+    private String packageName;
 }

@@ -13,7 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class ApplicationConfigurationId implements Serializable {
+public class ApplicationCatalogId implements Serializable {
     private Long applicationId;
     private Long terminalConfigurationId;
+    private ApplicationStage stage;
 }
