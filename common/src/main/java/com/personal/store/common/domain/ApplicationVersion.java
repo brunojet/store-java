@@ -28,13 +28,11 @@ public class ApplicationVersion extends SimpleEntityAbstraction {
         @JoinColumn(
             name = "application_id",
             referencedColumnName = "application_id",
-            insertable = false,
             updatable = false
         ),
         @JoinColumn(
             name = "terminal_configuration_id",
             referencedColumnName = "terminal_configuration_id",
-            insertable = false,
             updatable = false
         )
     })
