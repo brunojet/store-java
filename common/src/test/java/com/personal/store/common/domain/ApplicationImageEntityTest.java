@@ -125,43 +125,8 @@ class ApplicationImageEntityTest {
     }
 
     private void fixApplicationImageStatusCheckIfNeeded(String databaseProduct) {
-        // Hibernate may auto-generate enum CHECK constraints using ordinals (0..n)
-        // even when the enum is persisted via AttributeConverter with explicit codes.
-        // StorageObjectStatus uses codes: 0, 10, 20, 30, 40.
-        String desired = "status in (0,10,20,30,40)";
-        String ordinal = "status in (0,1,2,3,4)";
-
         try {
-            if (databaseProduct != null && databaseProduct.toLowerCase().contains("mysql")) {
-                @SuppressWarnings("unchecked")
-                List<Object[]> checks = entityManager.createNativeQuery(
-                        "SELECT tc.CONSTRAINT_NAME, cc.CHECK_CLAUSE "
-                                + "FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS tc "
-                                + "JOIN INFORMATION_SCHEMA.CHECK_CONSTRAINTS cc "
-                                + "  ON cc.CONSTRAINT_SCHEMA = tc.CONSTRAINT_SCHEMA AND cc.CONSTRAINT_NAME = tc.CONSTRAINT_NAME "
-                                + "WHERE tc.TABLE_SCHEMA = DATABASE() AND tc.TABLE_NAME='application_image' AND tc.CONSTRAINT_TYPE='CHECK'")
-                    .getResultList();
-
-                String constraintName = null;
-                String clause = null;
-                for (Object[] r : checks) {
-                    String name = String.valueOf(r[0]);
-                    String checkClause = String.valueOf(r[1]);
-                    if (normalizeCheck(checkClause).contains(normalizeCheck(ordinal))) {
-                        constraintName = name;
-                        clause = checkClause;
-                        break;
-                    }
-                }
-
-                if (constraintName != null) {
-                    System.out.println("[schema] fixing " + constraintName + ": " + clause + " -> (" + desired + ")");
-                    entityManager.createNativeQuery("ALTER TABLE application_image DROP CHECK " + constraintName)
-                        .executeUpdate();
-                    entityManager.createNativeQuery("ALTER TABLE application_image ADD CONSTRAINT " + constraintName + " CHECK (" + desired + ")")
-                        .executeUpdate();
-                }
-            } else {
+            if (databaseProduct != null && databaseProduct.toLowerCase().contains("h2")) {
                 // H2's INFORMATION_SCHEMA.CHECK_CONSTRAINTS does not expose TABLE_NAME.
                 // Also, H2 often auto-names inline check constraints (e.g., CONSTRAINT_3).
                 // For test stability, drop all check constraints on APPLICATION_IMAGE and recreate
@@ -196,18 +161,4 @@ class ApplicationImageEntityTest {
             System.out.println("[schema] (could not fix status CHECK: " + e.getClass().getSimpleName() + ")");
         }
     }
-
-    private static String normalizeCheck(String check) {
-        if (check == null) {
-            return "";
-        }
-        return check
-            .toLowerCase()
-            .replace("`", "")
-            .replace("\"", "")
-            .replace("(", "")
-            .replace(")", "")
-            .replaceAll("\\s+", "");
-    }
-
 }
