@@ -7,6 +7,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.personal.store.common.CommonTestApplication;
+import com.personal.store.common.domain.support.TestEntityFactory;
 
 import jakarta.persistence.EntityManager;
 
@@ -19,24 +20,17 @@ class ApplicationVersionEntityTest {
 
     @Test
     void persistsAndLoadsApplicationVersionWithCompositeFk() {
-        Application app = new Application();
-        app.setName("App Version Test");
-        entityManager.persist(app);
+        TestEntityFactory.AppTerminalConfig ctx = TestEntityFactory.persistAppTerminalConfig(
+            entityManager,
+            "App Version Test",
+            "Model X",
+            TerminalIntegrationType.RFAL,
+            "com.personal.store.app"
+        );
 
-        TerminalModel terminalModel = new TerminalModel();
-        terminalModel.setName("Model X");
-        entityManager.persist(terminalModel);
-
-        TerminalConfiguration terminalConfiguration = new TerminalConfiguration();
-        terminalConfiguration.setTerminalModel(terminalModel);
-        terminalConfiguration.setIntegrationType(TerminalIntegrationType.RFAL);
-        entityManager.persist(terminalConfiguration);
-
-        ApplicationConfiguration config = new ApplicationConfiguration();
-        config.setApplication(app);
-        config.setTerminalConfiguration(terminalConfiguration);
-        config.setPackageName("com.personal.store.app");
-        entityManager.persist(config);
+        Application app = ctx.application();
+        TerminalConfiguration terminalConfiguration = ctx.terminalConfiguration();
+        ApplicationConfiguration config = ctx.applicationConfiguration();
 
         ApplicationVersion version = new ApplicationVersion();
         version.setApplicationConfiguration(config);

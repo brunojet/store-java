@@ -7,6 +7,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.personal.store.common.CommonTestApplication;
+import com.personal.store.common.domain.support.TestEntityFactory;
 
 import jakarta.persistence.EntityManager;
 
@@ -19,26 +20,17 @@ class ApplicationConfigurationEntityTest {
 
     @Test
     void persistsAndLoadsApplicationConfigurationByCompositeId() {
-        Application app = new Application();
-        app.setName("App Config Test");
-        entityManager.persist(app);
+        TestEntityFactory.AppTerminalConfig ctx = TestEntityFactory.persistAppTerminalConfig(
+            entityManager,
+            "App Config Test",
+            "Model X",
+            TerminalIntegrationType.RFAL,
+            "com.personal.store.app"
+        );
 
-        TerminalModel terminalModel = new TerminalModel();
-        terminalModel.setName("Model X");
-        entityManager.persist(terminalModel);
+        Application app = ctx.application();
+        TerminalConfiguration terminalConfiguration = ctx.terminalConfiguration();
 
-        TerminalConfiguration terminalConfiguration = new TerminalConfiguration();
-        terminalConfiguration.setTerminalModel(terminalModel);
-        terminalConfiguration.setIntegrationType(TerminalIntegrationType.RFAL);
-        entityManager.persist(terminalConfiguration);
-
-        ApplicationConfiguration config = new ApplicationConfiguration();
-        config.setApplication(app);
-        config.setTerminalConfiguration(terminalConfiguration);
-        config.setPackageName("com.personal.store.app");
-
-        entityManager.persist(config);
-        entityManager.flush();
         entityManager.clear();
 
         ApplicationConfigurationId id = new ApplicationConfigurationId(app.getId(), terminalConfiguration.getId());

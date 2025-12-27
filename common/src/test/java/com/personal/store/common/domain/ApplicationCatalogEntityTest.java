@@ -7,7 +7,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.personal.store.common.CommonTestApplication;
-import com.personal.store.common.domain.abstraction.StorageObjectStatus;
+import com.personal.store.common.domain.support.TestEntityFactory;
 
 import jakarta.persistence.EntityManager;
 
@@ -20,49 +20,33 @@ class ApplicationCatalogEntityTest {
 
     @Test
     void persistsAndLoadsApplicationCatalogByCompositeId() {
-        Application app = new Application();
-        app.setName("App Catalog Test");
-        entityManager.persist(app);
+        TestEntityFactory.AppTerminalConfig ctx = TestEntityFactory.persistAppTerminalConfig(
+                entityManager,
+                "App Catalog Test",
+                "Model X",
+                TerminalIntegrationType.RFAL,
+                "com.personal.store.app"
+        );
 
-        TerminalModel terminalModel = new TerminalModel();
-        terminalModel.setName("Model X");
-        entityManager.persist(terminalModel);
+        Application app = ctx.application();
+        TerminalConfiguration terminalConfiguration = ctx.terminalConfiguration();
+        ApplicationConfiguration config = ctx.applicationConfiguration();
 
-        TerminalConfiguration terminalConfiguration = new TerminalConfiguration();
-        terminalConfiguration.setTerminalModel(terminalModel);
-        terminalConfiguration.setIntegrationType(TerminalIntegrationType.RFAL);
-        entityManager.persist(terminalConfiguration);
-
-        ApplicationConfiguration config = new ApplicationConfiguration();
-        config.setApplication(app);
-        config.setTerminalConfiguration(terminalConfiguration);
-        config.setPackageName("com.personal.store.app");
-        entityManager.persist(config);
-        entityManager.flush();
-
-        ApplicationImage icon = new ApplicationImage();
-        icon.setApplication(app);
-        icon.setImageType(ApplicationImageType.ICON);
-        icon.setName("icon.png");
-        icon.setMimeType("image/png");
-        icon.setSizeInBytes(12345L);
-        icon.setFileHash(nonZeroHash32());
-        icon.setStatus(StorageObjectStatus.AVAILABLE);
-        entityManager.persist(icon);
-
-        ApplicationProfile profile = new ApplicationProfile();
-        profile.setName("Profile A");
-        profile.setStage(ApplicationStage.PILOT);
-        profile.setIcon(icon);
-        entityManager.persist(profile);
-
-        ApplicationVersion version = new ApplicationVersion();
-        version.setApplicationConfiguration(config);
-        version.setName("Version 1");
-        version.setVersionName("1.0.0");
-        version.setVersionCode(1L);
-        version.setSize(123456L);
-        entityManager.persist(version);
+        ApplicationImage icon = TestEntityFactory.persistIcon(entityManager, app);
+        ApplicationProfile profile = TestEntityFactory.persistProfile(
+                entityManager,
+                icon,
+                "Profile A",
+                ApplicationStage.PILOT
+        );
+        ApplicationVersion version = TestEntityFactory.persistVersion(
+                entityManager,
+                config,
+                "Version 1",
+                "1.0.0",
+                1L,
+                123456L
+        );
 
         ApplicationCatalog catalog = new ApplicationCatalog();
         catalog.setId(new ApplicationCatalogId(app.getId(), terminalConfiguration.getId(),
@@ -98,12 +82,4 @@ class ApplicationCatalogEntityTest {
         assertThat(reloaded.getApplicationConfiguration().getId().getTerminalConfigurationId())
                 .isEqualTo(terminalConfiguration.getId());
     }
-
-        private byte[] nonZeroHash32() {
-                byte[] hash = new byte[32];
-                for (int i = 0; i < hash.length; i++) {
-                        hash[i] = (byte) (i + 1);
-                }
-                return hash;
-        }
 }
