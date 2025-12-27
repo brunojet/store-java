@@ -36,9 +36,15 @@ dependencies {
     // Version is managed by the Spring Boot BOM.
     testImplementation("com.mysql:mysql-connector-j")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testRuntimeOnly("com.h2database:h2")
+    testRuntimeOnly("com.h2database:h2:2.2.224")
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+
+configurations.testRuntimeClasspath {
+    resolutionStrategy {
+        force("com.h2database:h2:2.2.224")
+    }
 }

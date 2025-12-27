@@ -34,7 +34,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 	// In-memory database for tests
-	runtimeOnly("com.h2database:h2")
+	runtimeOnly("com.h2database:h2:2.2.224")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
