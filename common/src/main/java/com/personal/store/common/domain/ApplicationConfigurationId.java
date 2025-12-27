@@ -17,9 +17,9 @@ import lombok.Setter;
 @EqualsAndHashCode
 @Embeddable
 public class ApplicationConfigurationId implements Serializable {
-    @Column(name = "application_id")
+    @Column(name = "application_id", insertable = false, updatable = false)
     private Long applicationId;
 
-    @Column(name = "terminal_configuration_id")
+    @Column(name = "terminal_configuration_id", insertable = false, updatable = false)
     private Long terminalConfigurationId;
 }

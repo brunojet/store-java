@@ -40,9 +40,10 @@ class ApplicationCatalogEntityTest {
         entityManager.flush();
 
         ApplicationCatalog catalog = new ApplicationCatalog();
-        catalog.setApplicationId(app.getId());
-        catalog.setTerminalConfigurationId(terminalConfiguration.getId());
-        catalog.setStage(ApplicationStage.PILOT);
+        catalog.setId(new ApplicationCatalogId(
+            new ApplicationConfigurationId(app.getId(), terminalConfiguration.getId()),
+            ApplicationStage.PILOT
+        ));
         catalog.setApplicationConfiguration(config);
         catalog.setApplicationProfileId(999L);
         catalog.setApplicationVersionId(111L);
@@ -52,17 +53,25 @@ class ApplicationCatalogEntityTest {
         entityManager.flush();
         entityManager.clear();
 
-        ApplicationCatalogId id = new ApplicationCatalogId(app.getId(), terminalConfiguration.getId(), ApplicationStage.PILOT);
+        ApplicationCatalogId id = new ApplicationCatalogId(
+            new ApplicationConfigurationId(app.getId(), terminalConfiguration.getId()),
+            ApplicationStage.PILOT
+        );
         ApplicationCatalog reloaded = entityManager.find(ApplicationCatalog.class, id);
 
         assertThat(reloaded).isNotNull();
-        assertThat(reloaded.getApplicationId()).isEqualTo(app.getId());
-        assertThat(reloaded.getTerminalConfigurationId()).isEqualTo(terminalConfiguration.getId());
-        assertThat(reloaded.getStage()).isEqualTo(ApplicationStage.PILOT);
+        assertThat(reloaded.getId()).isNotNull();
+        assertThat(reloaded.getId().getApplicationConfigurationId()).isNotNull();
+        assertThat(reloaded.getId().getApplicationConfigurationId().getApplicationId()).isEqualTo(app.getId());
+        assertThat(reloaded.getId().getApplicationConfigurationId().getTerminalConfigurationId()).isEqualTo(terminalConfiguration.getId());
+        assertThat(reloaded.getId().getStage()).isEqualTo(ApplicationStage.PILOT);
         assertThat(reloaded.getApplicationProfileId()).isEqualTo(999L);
         assertThat(reloaded.getApplicationVersionId()).isEqualTo(111L);
         assertThat(reloaded.getActive()).isTrue();
 
         assertThat(reloaded.getApplicationConfiguration()).isNotNull();
+        assertThat(reloaded.getApplicationConfiguration().getId()).isNotNull();
+        assertThat(reloaded.getApplicationConfiguration().getId().getApplicationId()).isEqualTo(app.getId());
+        assertThat(reloaded.getApplicationConfiguration().getId().getTerminalConfigurationId()).isEqualTo(terminalConfiguration.getId());
     }
 }
