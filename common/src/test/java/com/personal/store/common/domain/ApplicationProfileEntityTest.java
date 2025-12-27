@@ -20,10 +20,7 @@ class ApplicationProfileEntityTest {
 
     @Test
     void persistsApplicationProfileWithIconAndStage() {
-        Application app = new Application();
-        app.setName("App for Profile");
-        entityManager.persist(app);
-        entityManager.flush();
+        Application app = TestEntityFactory.persistApplication(entityManager, "App for Profile");
 
         ApplicationImage icon = TestEntityFactory.persistIcon(entityManager, app);
 

@@ -18,6 +18,14 @@ public final class TestEntityFactory {
     private TestEntityFactory() {
     }
 
+    public static Application persistApplication(EntityManager entityManager, String name) {
+        Application app = new Application();
+        app.setName(name);
+        entityManager.persist(app);
+        entityManager.flush();
+        return app;
+    }
+
     public record AppTerminalConfig(
             Application application,
             TerminalModel terminalModel,
