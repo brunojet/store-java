@@ -10,7 +10,6 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.personal.store.common.CommonTestApplication;
-import com.personal.store.common.testutil.ApplicationImageSchemaWorkaround;
 
 import jakarta.persistence.EntityManager;
 
@@ -32,7 +31,6 @@ class ApplicationImageEntityTest {
         String databaseProduct = session.doReturningWork(c -> c.getMetaData().getDatabaseProductName());
         System.out.println("[schema] DB product = " + databaseProduct);
         printApplicationImageSchema(databaseProduct);
-        ApplicationImageSchemaWorkaround.fixApplicationImageChecksIfNeeded(entityManager);
 
         ApplicationImage img = new ApplicationImage();
         img.setApplication(app);

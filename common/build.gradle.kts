@@ -36,6 +36,12 @@ dependencies {
     // Version is managed by the Spring Boot BOM.
     testImplementation("com.mysql:mysql-connector-j")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // NOTE: H2 is pinned/forced due to instability observed with H2 2.4.240 under Gradle/JDK 25
+    // (spurious failures like "Check constraint invalid" / "The database has been closed" on valid INSERTs).
+    // Related upstream reports:
+    // - https://github.com/h2database/h2database/issues/4308 (Regression in H2 2.4.240: CHECK(IN ...) + DEFAULT IDENTITY fails)
+    // - https://github.com/h2database/h2database/issues/4292 (JdbcSQLIntegrityConstraintViolationException: Check constraint invalid)
+    // Once an upstream fix is confirmed, we can remove this pin and go back to the BOM-managed version.
     testRuntimeOnly("com.h2database:h2:2.2.224")
 }
 

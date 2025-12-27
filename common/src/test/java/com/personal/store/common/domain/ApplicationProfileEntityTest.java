@@ -8,8 +8,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import com.personal.store.common.CommonTestApplication;
 import com.personal.store.common.domain.abstraction.StorageObjectStatus;
-import com.personal.store.common.testutil.ApplicationImageSchemaWorkaround;
-import com.personal.store.common.testutil.ApplicationProfileSchemaWorkaround;
 
 import jakarta.persistence.EntityManager;
 
@@ -26,9 +24,6 @@ class ApplicationProfileEntityTest {
         app.setName("App for Profile");
         entityManager.persist(app);
         entityManager.flush();
-
-        ApplicationImageSchemaWorkaround.fixApplicationImageChecksIfNeeded(entityManager);
-        ApplicationProfileSchemaWorkaround.fixApplicationProfileStageCheckIfNeeded(entityManager);
 
         ApplicationImage icon = new ApplicationImage();
         icon.setApplication(app);
