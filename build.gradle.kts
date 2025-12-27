@@ -26,7 +26,10 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
 
 	// common shared module
-	implementation(project(":common"))
+	implementation(project(":common")) {
+		exclude(group = "org.springframework.boot", module = "spring-boot-starter-data-jpa")
+		exclude(group = "org.springframework.boot", module = "spring-boot-starter-jdbc")
+	}
 	// Standard Spring Boot test starter
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
