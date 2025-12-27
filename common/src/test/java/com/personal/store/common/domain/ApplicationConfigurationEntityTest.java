@@ -19,21 +19,40 @@ class ApplicationConfigurationEntityTest {
 
     @Test
     void persistsAndLoadsApplicationConfigurationByCompositeId() {
+        Application app = new Application();
+        app.setName("App Config Test");
+        entityManager.persist(app);
+
+        TerminalModel terminalModel = new TerminalModel();
+        terminalModel.setName("Model X");
+        entityManager.persist(terminalModel);
+
+        TerminalConfiguration terminalConfiguration = new TerminalConfiguration();
+        terminalConfiguration.setTerminalModel(terminalModel);
+        terminalConfiguration.setIntegrationType(TerminalIntegrationType.RFAL);
+        entityManager.persist(terminalConfiguration);
+
         ApplicationConfiguration config = new ApplicationConfiguration();
-        config.setApplicationId(10L);
-        config.setTerminalConfigurationId(20L);
+        config.setApplication(app);
+        config.setTerminalConfiguration(terminalConfiguration);
         config.setPackageName("com.personal.store.app");
 
         entityManager.persist(config);
         entityManager.flush();
         entityManager.clear();
 
-        ApplicationConfigurationId id = new ApplicationConfigurationId(10L, 20L);
+        ApplicationConfigurationId id = new ApplicationConfigurationId(app.getId(), terminalConfiguration.getId());
         ApplicationConfiguration reloaded = entityManager.find(ApplicationConfiguration.class, id);
 
         assertThat(reloaded).isNotNull();
-        assertThat(reloaded.getApplicationId()).isEqualTo(10L);
-        assertThat(reloaded.getTerminalConfigurationId()).isEqualTo(20L);
+        assertThat(reloaded.getId()).isNotNull();
+        assertThat(reloaded.getId().getApplicationId()).isEqualTo(app.getId());
+        assertThat(reloaded.getId().getTerminalConfigurationId()).isEqualTo(terminalConfiguration.getId());
         assertThat(reloaded.getPackageName()).isEqualTo("com.personal.store.app");
+
+        assertThat(reloaded.getApplication()).isNotNull();
+        assertThat(reloaded.getApplication().getId()).isEqualTo(app.getId());
+        assertThat(reloaded.getTerminalConfiguration()).isNotNull();
+        assertThat(reloaded.getTerminalConfiguration().getId()).isEqualTo(terminalConfiguration.getId());
     }
 }

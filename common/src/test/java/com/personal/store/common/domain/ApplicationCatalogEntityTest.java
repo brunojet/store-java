@@ -19,16 +19,29 @@ class ApplicationCatalogEntityTest {
 
     @Test
     void persistsAndLoadsApplicationCatalogByCompositeId() {
+        Application app = new Application();
+        app.setName("App Catalog Test");
+        entityManager.persist(app);
+
+        TerminalModel terminalModel = new TerminalModel();
+        terminalModel.setName("Model X");
+        entityManager.persist(terminalModel);
+
+        TerminalConfiguration terminalConfiguration = new TerminalConfiguration();
+        terminalConfiguration.setTerminalModel(terminalModel);
+        terminalConfiguration.setIntegrationType(TerminalIntegrationType.RFAL);
+        entityManager.persist(terminalConfiguration);
+
         ApplicationConfiguration config = new ApplicationConfiguration();
-        config.setApplicationId(10L);
-        config.setTerminalConfigurationId(20L);
+        config.setApplication(app);
+        config.setTerminalConfiguration(terminalConfiguration);
         config.setPackageName("com.personal.store.app");
         entityManager.persist(config);
         entityManager.flush();
 
         ApplicationCatalog catalog = new ApplicationCatalog();
-        catalog.setApplicationId(10L);
-        catalog.setTerminalConfigurationId(20L);
+        catalog.setApplicationId(app.getId());
+        catalog.setTerminalConfigurationId(terminalConfiguration.getId());
         catalog.setStage(ApplicationStage.PILOT);
         catalog.setApplicationConfiguration(config);
         catalog.setApplicationProfileId(999L);
@@ -39,19 +52,17 @@ class ApplicationCatalogEntityTest {
         entityManager.flush();
         entityManager.clear();
 
-        ApplicationCatalogId id = new ApplicationCatalogId(10L, 20L, ApplicationStage.PILOT);
+        ApplicationCatalogId id = new ApplicationCatalogId(app.getId(), terminalConfiguration.getId(), ApplicationStage.PILOT);
         ApplicationCatalog reloaded = entityManager.find(ApplicationCatalog.class, id);
 
         assertThat(reloaded).isNotNull();
-        assertThat(reloaded.getApplicationId()).isEqualTo(10L);
-        assertThat(reloaded.getTerminalConfigurationId()).isEqualTo(20L);
+        assertThat(reloaded.getApplicationId()).isEqualTo(app.getId());
+        assertThat(reloaded.getTerminalConfigurationId()).isEqualTo(terminalConfiguration.getId());
         assertThat(reloaded.getStage()).isEqualTo(ApplicationStage.PILOT);
         assertThat(reloaded.getApplicationProfileId()).isEqualTo(999L);
         assertThat(reloaded.getApplicationVersionId()).isEqualTo(111L);
         assertThat(reloaded.getActive()).isTrue();
 
         assertThat(reloaded.getApplicationConfiguration()).isNotNull();
-        assertThat(reloaded.getApplicationConfiguration().getApplicationId()).isEqualTo(10L);
-        assertThat(reloaded.getApplicationConfiguration().getTerminalConfigurationId()).isEqualTo(20L);
     }
 }

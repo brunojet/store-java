@@ -19,9 +19,22 @@ class ApplicationVersionEntityTest {
 
     @Test
     void persistsAndLoadsApplicationVersionWithCompositeFk() {
+        Application app = new Application();
+        app.setName("App Version Test");
+        entityManager.persist(app);
+
+        TerminalModel terminalModel = new TerminalModel();
+        terminalModel.setName("Model X");
+        entityManager.persist(terminalModel);
+
+        TerminalConfiguration terminalConfiguration = new TerminalConfiguration();
+        terminalConfiguration.setTerminalModel(terminalModel);
+        terminalConfiguration.setIntegrationType(TerminalIntegrationType.RFAL);
+        entityManager.persist(terminalConfiguration);
+
         ApplicationConfiguration config = new ApplicationConfiguration();
-        config.setApplicationId(10L);
-        config.setTerminalConfigurationId(20L);
+        config.setApplication(app);
+        config.setTerminalConfiguration(terminalConfiguration);
         config.setPackageName("com.personal.store.app");
         entityManager.persist(config);
 
@@ -47,8 +60,9 @@ class ApplicationVersionEntityTest {
         assertThat(reloaded.getSize()).isEqualTo(123456L);
 
         assertThat(reloaded.getApplicationConfiguration()).isNotNull();
-        assertThat(reloaded.getApplicationConfiguration().getApplicationId()).isEqualTo(10L);
-        assertThat(reloaded.getApplicationConfiguration().getTerminalConfigurationId()).isEqualTo(20L);
+        assertThat(reloaded.getApplicationConfiguration().getId()).isNotNull();
+        assertThat(reloaded.getApplicationConfiguration().getId().getApplicationId()).isEqualTo(app.getId());
+        assertThat(reloaded.getApplicationConfiguration().getId().getTerminalConfigurationId()).isEqualTo(terminalConfiguration.getId());
         assertThat(reloaded.getApplicationConfiguration().getPackageName()).isEqualTo("com.personal.store.app");
     }
 }
