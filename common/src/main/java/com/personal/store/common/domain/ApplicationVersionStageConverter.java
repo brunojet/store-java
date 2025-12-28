@@ -4,9 +4,9 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = false)
-public class ApplicationCatalogStageConverter implements AttributeConverter<ApplicationCatalogStage, Short> {
+public class ApplicationVersionStageConverter implements AttributeConverter<ApplicationVersionStage, Short> {
     @Override
-    public Short convertToDatabaseColumn(ApplicationCatalogStage attribute) {
+    public Short convertToDatabaseColumn(ApplicationVersionStage attribute) {
         if (attribute == null) {
             return null;
         }
@@ -14,10 +14,10 @@ public class ApplicationCatalogStageConverter implements AttributeConverter<Appl
     }
 
     @Override
-    public ApplicationCatalogStage convertToEntityAttribute(Short dbData) {
+    public ApplicationVersionStage convertToEntityAttribute(Short dbData) {
         if (dbData == null) {
             return null;
         }
-        return ApplicationCatalogStage.fromCode(dbData);
+        return ApplicationVersionStage.fromCode(dbData);
     }
 }

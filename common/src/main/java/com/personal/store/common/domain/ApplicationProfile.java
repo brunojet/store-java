@@ -39,7 +39,7 @@ public class ApplicationProfile extends SimpleEntityAbstraction {
 
     @Column(name = "stage")
     @Convert(converter = ApplicationProfileStageConverter.class)
-    private ApplicationStage stage;
+    private ApplicationProfileStage stage;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "icon_id", referencedColumnName= "id", nullable = false)

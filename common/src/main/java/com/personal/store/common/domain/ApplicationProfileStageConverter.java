@@ -1,14 +1,23 @@
 package com.personal.store.common.domain;
 
-import java.util.EnumSet;
-import java.util.Set;
-
+import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = false)
-public class ApplicationProfileStageConverter extends ApplicationStageConverter {
+public class ApplicationProfileStageConverter implements AttributeConverter<ApplicationProfileStage, Short> {
     @Override
-    protected Set<ApplicationStage> allowedStages() {
-        return EnumSet.of(ApplicationStage.PENDING, ApplicationStage.REVIEW, ApplicationStage.PRODUCTION, ApplicationStage.ARCHIVED);
+    public Short convertToDatabaseColumn(ApplicationProfileStage attribute) {
+        if (attribute == null) {
+            return null;
+        }
+        return attribute.getCode();
+    }
+
+    @Override
+    public ApplicationProfileStage convertToEntityAttribute(Short dbData) {
+        if (dbData == null) {
+            return null;
+        }
+        return ApplicationProfileStage.fromCode(dbData);
     }
 }

@@ -37,7 +37,7 @@ class ApplicationCatalogEntityTest {
                 entityManager,
                 icon,
                 "Profile A",
-                ApplicationStage.REVIEW
+                ApplicationProfileStage.REVIEW
         );
         ApplicationVersion version = TestEntityFactory.persistVersion(
                 entityManager,
@@ -50,7 +50,7 @@ class ApplicationCatalogEntityTest {
 
         ApplicationCatalog catalog = new ApplicationCatalog();
         catalog.setId(new ApplicationCatalogId(app.getId(), terminalConfiguration.getId(),
-                ApplicationStage.PILOT));
+                ApplicationCatalogStage.PILOT));
         catalog.setApplicationConfiguration(config);
         catalog.setApplicationProfile(profile);
         catalog.setApplicationVersion(version);
@@ -61,7 +61,7 @@ class ApplicationCatalogEntityTest {
         entityManager.clear();
 
         ApplicationCatalogId id = new ApplicationCatalogId(app.getId(), terminalConfiguration.getId(),
-                ApplicationStage.PILOT);
+                ApplicationCatalogStage.PILOT);
         ApplicationCatalog reloaded = entityManager.find(ApplicationCatalog.class, id);
 
         assertThat(reloaded).isNotNull();
@@ -69,7 +69,7 @@ class ApplicationCatalogEntityTest {
         assertThat(reloaded.getId().getApplicationId()).isEqualTo(app.getId());
         assertThat(reloaded.getId().getTerminalConfigurationId())
                 .isEqualTo(terminalConfiguration.getId());
-        assertThat(reloaded.getId().getStage()).isEqualTo(ApplicationStage.PILOT);
+        assertThat(reloaded.getId().getStage()).isEqualTo(ApplicationCatalogStage.PILOT);
         assertThat(reloaded.getApplicationProfile()).isNotNull();
         assertThat(reloaded.getApplicationProfile().getId()).isEqualTo(profile.getId());
         assertThat(reloaded.getApplicationVersion()).isNotNull();

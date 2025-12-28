@@ -2,9 +2,9 @@ package com.personal.store.common.domain;
 
 import java.io.Serializable;
 
-import jakarta.persistence.Embeddable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,5 +26,5 @@ public class ApplicationCatalogId implements Serializable {
 
     @Column(name = "stage")
     @Convert(converter = ApplicationCatalogStageConverter.class)
-    private ApplicationStage stage;
+    private ApplicationCatalogStage stage;
 }

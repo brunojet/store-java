@@ -5,7 +5,7 @@ import com.personal.store.common.domain.ApplicationConfiguration;
 import com.personal.store.common.domain.ApplicationImage;
 import com.personal.store.common.domain.ApplicationImageType;
 import com.personal.store.common.domain.ApplicationProfile;
-import com.personal.store.common.domain.ApplicationStage;
+import com.personal.store.common.domain.ApplicationProfileStage;
 import com.personal.store.common.domain.ApplicationVersion;
 import com.personal.store.common.domain.TerminalConfiguration;
 import com.personal.store.common.domain.TerminalIntegrationType;
@@ -83,7 +83,7 @@ public final class TestEntityFactory {
             EntityManager entityManager,
             ApplicationImage icon,
             String name,
-            ApplicationStage stage
+            ApplicationProfileStage stage
     ) {
         ApplicationProfile profile = new ApplicationProfile();
         profile.setName(name);

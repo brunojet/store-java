@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.personal.store.common.domain.abstraction.SimpleEntityAbstraction;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -52,4 +53,8 @@ public class ApplicationVersion extends SimpleEntityAbstraction {
 
     @Column(name = "production_at")
     private LocalDateTime productionAt;
+
+    @Column(name = "stage", columnDefinition = "smallint default 0")
+    @Convert(converter = ApplicationVersionStageConverter.class)
+    private ApplicationVersionStage stage;
 }

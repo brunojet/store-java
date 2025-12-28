@@ -28,7 +28,7 @@ class ApplicationProfileEntityTest {
             entityManager,
             icon,
             "Profile A",
-            ApplicationStage.PRODUCTION
+            ApplicationProfileStage.PRODUCTION
         );
         profile.setPartnerName("Partner X");
 
@@ -38,7 +38,7 @@ class ApplicationProfileEntityTest {
         ApplicationProfile reloaded = entityManager.find(ApplicationProfile.class, profile.getId());
         assertThat(reloaded).isNotNull();
         assertThat(reloaded.getName()).isEqualTo("Profile A");
-        assertThat(reloaded.getStage()).isEqualTo(ApplicationStage.PRODUCTION);
+        assertThat(reloaded.getStage()).isEqualTo(ApplicationProfileStage.PRODUCTION);
         assertThat(reloaded.getIcon()).isNotNull();
         assertThat(reloaded.getIcon().getId()).isEqualTo(icon.getId());
     }
