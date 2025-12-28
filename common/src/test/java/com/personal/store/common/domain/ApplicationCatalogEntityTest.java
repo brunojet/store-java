@@ -82,4 +82,108 @@ class ApplicationCatalogEntityTest {
         assertThat(reloaded.getApplicationConfiguration().getId().getTerminalConfigurationId())
                 .isEqualTo(terminalConfiguration.getId());
     }
+
+    @Test
+    void persistsAndLoadsApplicationCatalogWithReviewStage() {
+        TestEntityFactory.AppTerminalConfig ctx = TestEntityFactory.persistAppTerminalConfig(
+                entityManager,
+                "App Catalog Test Review",
+                "Model X",
+                TerminalIntegrationType.RFAL,
+                "com.personal.store.app"
+        );
+
+        Application app = ctx.application();
+        TerminalConfiguration terminalConfiguration = ctx.terminalConfiguration();
+        ApplicationConfiguration config = ctx.applicationConfiguration();
+
+        ApplicationImage icon = TestEntityFactory.persistIcon(entityManager, app);
+        ApplicationProfile profile = TestEntityFactory.persistProfile(
+                entityManager,
+                icon,
+                "Profile B",
+                ApplicationProfileStage.REVIEW
+        );
+        ApplicationVersion version = TestEntityFactory.persistVersion(
+                entityManager,
+                config,
+                "Version 2",
+                "2.0.0",
+                2L,
+                654321L
+        );
+
+        ApplicationCatalog catalog = new ApplicationCatalog();
+        catalog.setId(new ApplicationCatalogId(app.getId(), terminalConfiguration.getId(),
+                ApplicationCatalogStage.REVIEW));
+        catalog.setApplicationConfiguration(config);
+        catalog.setApplicationProfile(profile);
+        catalog.setApplicationVersion(version);
+        catalog.setActive(Boolean.TRUE);
+
+        entityManager.persist(catalog);
+        entityManager.flush();
+        entityManager.clear();
+
+        ApplicationCatalogId id = new ApplicationCatalogId(app.getId(), terminalConfiguration.getId(),
+                ApplicationCatalogStage.REVIEW);
+        ApplicationCatalog reloaded = entityManager.find(ApplicationCatalog.class, id);
+
+        assertThat(reloaded).isNotNull();
+        assertThat(reloaded.getId().getStage()).isEqualTo(ApplicationCatalogStage.REVIEW);
+        assertThat(reloaded.getApplicationProfile()).isNotNull();
+        assertThat(reloaded.getApplicationVersion()).isNotNull();
+    }
+
+    @Test
+    void persistsAndLoadsApplicationCatalogWithProductionStage() {
+        TestEntityFactory.AppTerminalConfig ctx = TestEntityFactory.persistAppTerminalConfig(
+                entityManager,
+                "App Catalog Test Prod",
+                "Model X",
+                TerminalIntegrationType.RFAL,
+                "com.personal.store.app"
+        );
+
+        Application app = ctx.application();
+        TerminalConfiguration terminalConfiguration = ctx.terminalConfiguration();
+        ApplicationConfiguration config = ctx.applicationConfiguration();
+
+        ApplicationImage icon = TestEntityFactory.persistIcon(entityManager, app);
+        ApplicationProfile profile = TestEntityFactory.persistProfile(
+                entityManager,
+                icon,
+                "Profile C",
+                ApplicationProfileStage.PRODUCTION
+        );
+        ApplicationVersion version = TestEntityFactory.persistVersion(
+                entityManager,
+                config,
+                "Version 3",
+                "3.0.0",
+                3L,
+                111111L
+        );
+
+        ApplicationCatalog catalog = new ApplicationCatalog();
+        catalog.setId(new ApplicationCatalogId(app.getId(), terminalConfiguration.getId(),
+                ApplicationCatalogStage.PRODUCTION));
+        catalog.setApplicationConfiguration(config);
+        catalog.setApplicationProfile(profile);
+        catalog.setApplicationVersion(version);
+        catalog.setActive(Boolean.TRUE);
+
+        entityManager.persist(catalog);
+        entityManager.flush();
+        entityManager.clear();
+
+        ApplicationCatalogId id = new ApplicationCatalogId(app.getId(), terminalConfiguration.getId(),
+                ApplicationCatalogStage.PRODUCTION);
+        ApplicationCatalog reloaded = entityManager.find(ApplicationCatalog.class, id);
+
+        assertThat(reloaded).isNotNull();
+        assertThat(reloaded.getId().getStage()).isEqualTo(ApplicationCatalogStage.PRODUCTION);
+        assertThat(reloaded.getApplicationProfile()).isNotNull();
+        assertThat(reloaded.getApplicationVersion()).isNotNull();
+    }
 }
