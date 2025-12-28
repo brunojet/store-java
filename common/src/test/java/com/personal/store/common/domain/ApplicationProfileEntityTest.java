@@ -7,7 +7,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.personal.store.common.CommonTestApplication;
-import com.personal.store.common.domain.abstraction.StorageObjectStatus;
+import com.personal.store.common.domain.support.TestEntityFactory;
 
 import jakarta.persistence.EntityManager;
 
@@ -20,28 +20,17 @@ class ApplicationProfileEntityTest {
 
     @Test
     void persistsApplicationProfileWithIconAndStage() {
-        Application app = new Application();
-        app.setName("App for Profile");
-        entityManager.persist(app);
-        entityManager.flush();
+        Application app = TestEntityFactory.persistApplication(entityManager, "App for Profile");
 
-        ApplicationImage icon = new ApplicationImage();
-        icon.setApplication(app);
-        icon.setImageType(ApplicationImageType.ICON);
-        icon.setName("icon.png");
-        icon.setMimeType("image/png");
-        icon.setSizeInBytes(12345L);
-        icon.setFileHash(nonZeroHash32());
-        icon.setStatus(StorageObjectStatus.AVAILABLE);
-        entityManager.persist(icon);
-        entityManager.flush();
+        ApplicationImage icon = TestEntityFactory.persistIcon(entityManager, app);
 
-        ApplicationProfile profile = new ApplicationProfile();
-        profile.setName("Profile A");
-        profile.setStage(ApplicationStage.PRODUCTION);
-        profile.setIcon(icon);
+        ApplicationProfile profile = TestEntityFactory.persistProfile(
+            entityManager,
+            icon,
+            "Profile A",
+            ApplicationProfileStage.PRODUCTION
+        );
         profile.setPartnerName("Partner X");
-        entityManager.persist(profile);
 
         entityManager.flush();
         entityManager.clear();
@@ -49,17 +38,8 @@ class ApplicationProfileEntityTest {
         ApplicationProfile reloaded = entityManager.find(ApplicationProfile.class, profile.getId());
         assertThat(reloaded).isNotNull();
         assertThat(reloaded.getName()).isEqualTo("Profile A");
-        assertThat(reloaded.getStage()).isEqualTo(ApplicationStage.PRODUCTION);
+        assertThat(reloaded.getStage()).isEqualTo(ApplicationProfileStage.PRODUCTION);
         assertThat(reloaded.getIcon()).isNotNull();
         assertThat(reloaded.getIcon().getId()).isEqualTo(icon.getId());
     }
-
-    private byte[] nonZeroHash32() {
-        byte[] hash = new byte[32];
-        for (int i = 0; i < hash.length; i++) {
-            hash[i] = (byte) (i + 1);
-        }
-        return hash;
-    }
-
 }

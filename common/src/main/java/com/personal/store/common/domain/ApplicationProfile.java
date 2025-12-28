@@ -38,8 +38,8 @@ public class ApplicationProfile extends SimpleEntityAbstraction {
     private LocalDateTime productionAt;
 
     @Column(name = "stage")
-    @Convert(converter = ApplicationStageConverter.class)
-    private ApplicationStage stage;
+    @Convert(converter = ApplicationProfileStageConverter.class)
+    private ApplicationProfileStage stage;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "icon_id", referencedColumnName= "id", nullable = false)
