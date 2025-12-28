@@ -38,7 +38,7 @@ public class ApplicationProfile extends SimpleEntityAbstraction {
     private LocalDateTime productionAt;
 
     @Column(name = "stage")
-    @Convert(converter = ApplicationStageConverter.class)
+    @Convert(converter = ApplicationProfileStageConverter.class)
     private ApplicationStage stage;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

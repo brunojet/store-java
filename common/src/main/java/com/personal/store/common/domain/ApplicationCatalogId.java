@@ -25,6 +25,6 @@ public class ApplicationCatalogId implements Serializable {
     private Long terminalConfigurationId;
 
     @Column(name = "stage")
-    @Convert(converter = ApplicationStageConverter.class)
+    @Convert(converter = ApplicationCatalogStageConverter.class)
     private ApplicationStage stage;
 }

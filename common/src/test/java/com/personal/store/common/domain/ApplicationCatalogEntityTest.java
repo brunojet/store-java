@@ -37,7 +37,7 @@ class ApplicationCatalogEntityTest {
                 entityManager,
                 icon,
                 "Profile A",
-                ApplicationStage.PILOT
+                ApplicationStage.REVIEW
         );
         ApplicationVersion version = TestEntityFactory.persistVersion(
                 entityManager,
