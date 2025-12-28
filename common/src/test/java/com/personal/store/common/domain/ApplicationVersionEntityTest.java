@@ -39,6 +39,7 @@ class ApplicationVersionEntityTest {
         version.setVersionName("1.0.0");
         version.setVersionCode(1L);
         version.setSize(123456L);
+        version.setStage(ApplicationVersionStage.PILOT);
 
         entityManager.persist(version);
         entityManager.flush();
@@ -52,6 +53,8 @@ class ApplicationVersionEntityTest {
         assertThat(reloaded.getVersionName()).isEqualTo("1.0.0");
         assertThat(reloaded.getVersionCode()).isEqualTo(1L);
         assertThat(reloaded.getSize()).isEqualTo(123456L);
+
+        assertThat(reloaded.getStage()).isEqualTo(ApplicationVersionStage.PILOT);
 
         assertThat(reloaded.getApplicationConfiguration()).isNotNull();
         assertThat(reloaded.getApplicationConfiguration().getId()).isNotNull();
